@@ -2,6 +2,7 @@ package com.pandian.samuvel.shoppinglist;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pandian.samuvel.shoppinglist.Model.ShoppingItemList;
 import com.pandian.samuvel.shoppinglist.Model.ShoppingList;
 
 import java.util.HashMap;
@@ -12,16 +13,6 @@ import java.util.HashMap;
 
 public class Helper
 {
-    public static void addShoppingList(ShoppingList shoppingLists){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("activeList");
-        ref.push().setValue(shoppingLists);
-    }
-    public static void updateShoppingListsd(ShoppingList shoppingLists){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("activeList");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("activeList",shoppingLists);
-        ref.push().updateChildren(map);
-    }
 
     public static void createShoppingList(String listName, HashMap<String, Long> timeStampCreated) {
         ShoppingList shoppingList = new ShoppingList();
@@ -44,5 +35,15 @@ public class Helper
 
     public static void removeShoppingList(String key) {
         FirebaseDatabase.getInstance().getReference().child("activeList").child(key).removeValue();
+    }
+
+    public static void addListItem(String key,String itemName){
+        ShoppingItemList shoppingItemList = new ShoppingItemList();
+        shoppingItemList.setItemName(itemName);
+        shoppingItemList.setOwner("Anonymous");
+        FirebaseDatabase.getInstance().getReference().child("shoppingListItems").child(key).push().setValue(shoppingItemList);
+    }
+    public static void removeListItem(String groupKey,String key){
+        FirebaseDatabase.getInstance().getReference().child("shoppingListItems").child(groupKey).child(key).removeValue();
     }
 }

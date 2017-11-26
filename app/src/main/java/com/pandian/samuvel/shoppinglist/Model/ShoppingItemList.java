@@ -9,13 +9,23 @@ import java.io.Serializable;
 public class ShoppingItemList implements Serializable {
     String itemName;
     String owner;
+    String key;
 
     public ShoppingItemList() {
     }
 
-    public ShoppingItemList(String itemName, String owner) {
+    public ShoppingItemList(String key,String itemName, String owner) {
+        this.key = key;
         this.itemName = itemName;
         this.owner = owner;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getItemName() {
@@ -24,5 +34,13 @@ public class ShoppingItemList implements Serializable {
 
     public String getOwner() {
         return owner;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

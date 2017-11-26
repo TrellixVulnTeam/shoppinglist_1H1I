@@ -53,7 +53,9 @@ public class ShoppingListFragment extends Fragment{
         dialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
         dialog.show();
         //checkChildIsAvailable(dialog);
-        getShoppingList(dialog);
+        if(checkChildIsAvailable(dialog)) {
+            getShoppingList(dialog);
+        }
         return rootView;
     }
 
@@ -61,11 +63,13 @@ public class ShoppingListFragment extends Fragment{
         shoppingListview = rootView.findViewById(R.id.shopingListLv);
     }
 
-    private void checkChildIsAvailable(final ProgressDialog dialog){
+    private boolean checkChildIsAvailable(final ProgressDialog dialog){
+        final boolean[] check = {true};
         FirebaseDatabase.getInstance().getReference().child("activeList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount()==0){
+                if(!dataSnapshot.exists()){
+                    check[0] = false;
                     dialog.dismiss();
                     Toast.makeText(getContext(),"List is empty!",Toast.LENGTH_SHORT).show();
                 }
@@ -76,21 +80,21 @@ public class ShoppingListFragment extends Fragment{
 
             }
         });
+        return check[0];
     }
+
     public void getShoppingList(final ProgressDialog dialog){
         final ArrayList<ShoppingList> list = new ArrayList<>();
         FirebaseDatabase.getInstance().getReference().child("activeList").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getChildrenCount()==0){
-                    dialog.dismiss();
-                }
                 if(dataSnapshot!=null && dataSnapshot.getValue()!= null) {
                     dialog.dismiss();
                     final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
                     shoppingList.setKey(dataSnapshot.getKey());
                     list.add(shoppingList);
                     adapter = new ShoppingListAdapter(list,getContext());
+                    if(getContext()!=null)
                     shoppingListview.setAdapter(adapter);
                     size = list.size();
                     shoppingListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ActivityChooserView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +19,9 @@ import android.widget.Toast;
 
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.pandian.samuvel.shoppinglist.Fragments.MealsFragment;
 import com.pandian.samuvel.shoppinglist.Fragments.ShoppingListFragment;
 import com.pandian.samuvel.shoppinglist.Helper;
-import com.pandian.samuvel.shoppinglist.Model.ShoppingList;
 import com.pandian.samuvel.shoppinglist.R;
 
 import java.util.ArrayList;
@@ -60,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View promptView = inflater.inflate(R.layout.create_list_prompt,null);
+        View promptView = inflater.inflate(R.layout.prompt_create_list,null);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(promptView);
