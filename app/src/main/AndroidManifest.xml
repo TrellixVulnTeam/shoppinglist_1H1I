@@ -18,7 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ActiveShoppingListActivity"></activity>
+        <activity android:name=".Activities.ActiveShoppingListActivity" />
+        <activity android:name=".Activities.Auth.SignInActivity" />
+        <activity android:name=".Activities.Auth.CreateAccountActivity"></activity>
     </application>
 
 </manifest>
