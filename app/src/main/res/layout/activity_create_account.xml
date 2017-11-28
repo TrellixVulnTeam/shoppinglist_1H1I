@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.pandian.samuvel.shoppinglist.Activities.Auth.CreateAccountActivity"
-    android:background="@drawable/home_bg"
+    android:background="@drawable/homebg"
     >
     <EditText
         android:id="@+id/edit_text"
@@ -95,8 +95,9 @@
             android:text="Sign In"
             android:textColor="#ffffff"
             android:textSize="20sp"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:clickable="true" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
