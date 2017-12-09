@@ -1,7 +1,9 @@
 package com.pandian.samuvel.shoppinglist.Activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,12 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.pandian.samuvel.shoppinglist.Activities.Auth.SignInActivity;
 import com.pandian.samuvel.shoppinglist.Fragments.MealsFragment;
 import com.pandian.samuvel.shoppinglist.Fragments.ShoppingListFragment;
 import com.pandian.samuvel.shoppinglist.Helper;
@@ -35,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     FloatingActionButton fabButton;
     EditText userInputCreateList;
-    DatabaseReference ref;
+    FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewpager);
         tabLayout = findViewById(R.id.tabs);
         fabButton = findViewById(R.id.fab);
-
+        mAuth = FirebaseAuth.getInstance();
         //ref = FirebaseDatabase.getInstance().getReference().child("activeList");
 
         setSupportActionBar(toolbar);
@@ -61,6 +69,17 @@ public class MainActivity extends AppCompatActivity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(promptView);
+
+        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user == null){
+                    startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                    finish();
+                }
+            }
+        };
 
         userInputCreateList = promptView.findViewById(R.id.createListEt);
         builder.setPositiveButton("Create",
@@ -128,6 +147,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                logOutUser();
+                return true;
+            default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu,menu);
+        return true;
+    }
 
+    private void logOutUser(){
+        mAuth.signOut();
+        Intent intent = new Intent(this,SignInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
 }

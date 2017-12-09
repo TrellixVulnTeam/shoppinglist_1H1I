@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,63 +8,67 @@
     android:background="@drawable/homebg"
     >
     <EditText
-        android:id="@+id/edit_text"
+        android:id="@+id/createAccUserNameET"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="52dp"
         android:layout_marginStart="52dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="90dp"
         android:background="#ffffff"
         android:hint="Sam"
         android:textSize="18sp"
         android:padding="10dp"/>
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/createAccEmailEt"
+        android:layout_below="@id/createAccUserNameET"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="52dp"
         android:layout_marginStart="52dp"
         android:background="#ffffff"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
         android:hint="sam@example.com"
         android:textSize="18sp"
         android:padding="10dp"/>
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/createAccPasswordEt"
+        android:layout_below="@id/createAccEmailEt"
+        android:inputType="textPassword"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginEnd="52dp"
         android:layout_marginStart="52dp"
+        android:layout_marginBottom="24dp"
         android:background="#ffffff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="297dp"
         android:hint="*******"
         android:textSize="18sp"
         android:padding="10dp"/>
 
-
+    <EditText
+        android:id="@+id/createAccPhoneNumberEt"
+        android:layout_below="@id/createAccPasswordEt"
+        android:inputType="phone"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginBottom="24dp"
+        android:background="#ffffff"
+        android:hint="+919840984033"
+        android:textSize="18sp"
+        android:padding="10dp"/>
 
     <Button
+        android:id="@+id/createAccBtn"
+        android:layout_below="@id/createAccPhoneNumberEt"
         android:layout_width="240dp"
         android:layout_height="50dp"
         android:padding="2dp"
         android:layout_marginEnd="72dp"
         android:layout_marginStart="72dp"
         android:text="Create Account"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="416dp"
-        tools:ignore="MissingConstraints"
         android:background="@color/colorPrimary"
         android:textColor="#ffffff"/>
 
@@ -74,12 +78,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="40dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="490dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="40dp"
-        tools:ignore="MissingConstraints">
+        android:layout_marginTop="24dp"
+        android:layout_below="@id/createAccBtn">
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,6 +91,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/signInAccTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:linksClickable="true"
@@ -100,4 +103,13 @@
             android:clickable="true" />
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/createAccPb"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>
