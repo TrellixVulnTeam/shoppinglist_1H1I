@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.pandian.samuvel.shoppinglist.Activities.MainActivity;
 import com.pandian.samuvel.shoppinglist.Model.User;
 import com.pandian.samuvel.shoppinglist.R;
@@ -87,7 +88,9 @@ public class CreateAccountActivity extends AppCompatActivity {
                     HashMap<String,Object> users = new HashMap<>();
                     User user = new User();
                     user.setUserName(userName);
-                    users.put(phoneNumber,user);
+                    user.setPhoneNumber(phoneNumber);
+                    user.setCreatedAt(ServerValue.TIMESTAMP);
+                    users.put(mAuth.getUid(),user);
                     FirebaseDatabase.getInstance().getReference().child("users").setValue(users);
                     finish();
                 }

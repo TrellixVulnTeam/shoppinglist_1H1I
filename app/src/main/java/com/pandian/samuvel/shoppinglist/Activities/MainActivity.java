@@ -23,6 +23,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ import com.pandian.samuvel.shoppinglist.Activities.Auth.SignInActivity;
 import com.pandian.samuvel.shoppinglist.Fragments.MealsFragment;
 import com.pandian.samuvel.shoppinglist.Fragments.ShoppingListFragment;
 import com.pandian.samuvel.shoppinglist.Helper;
+import com.pandian.samuvel.shoppinglist.Model.User;
 import com.pandian.samuvel.shoppinglist.R;
 
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabButton;
     EditText userInputCreateList;
     FirebaseAuth mAuth;
+    String ownerName ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +84,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
+        Helper.getCurrentUser(mAuth.getUid()).continueWith(new Continuation<User, Object>() {
+            @Override
+            public Object then(@NonNull Task<User> task) throws Exception {
+                ownerName = task.getResult().getUserName();
+                return null;
+            }
+        });
         userInputCreateList = promptView.findViewById(R.id.createListEt);
         builder.setPositiveButton("Create",
                 new DialogInterface.OnClickListener() {
@@ -91,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                             //ref.setValue(listName);
                             HashMap<String,Long> timeStampCreated = new HashMap<>();
                             timeStampCreated.put("timeStamp",System.currentTimeMillis());
-                            Helper.createShoppingList(listName,timeStampCreated);
+                            Helper.createShoppingList(listName,timeStampCreated,ownerName);
                             //ShoppingList shoppingList = new ShoppingList(listName,"Anonymous",timeStampCreated);
                             //Helper.addShoppingList(shoppingList);
                             userInputCreateList.setText("");

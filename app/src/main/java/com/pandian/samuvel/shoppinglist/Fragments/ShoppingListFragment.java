@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +37,7 @@ public class ShoppingListFragment extends Fragment{
     ListView shoppingListview;
     int size =0;
     ShoppingListAdapter adapter;
+    FirebaseAuth mAuth;
     public ShoppingListFragment() {
         // Required empty public constructor
     }
@@ -61,11 +63,12 @@ public class ShoppingListFragment extends Fragment{
 
     public void initializeScreen(View rootView){
         shoppingListview = rootView.findViewById(R.id.shopingListLv);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private boolean checkChildIsAvailable(final ProgressDialog dialog){
         final boolean[] check = {true};
-        FirebaseDatabase.getInstance().getReference().child("activeList").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("activeList").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
@@ -85,7 +88,7 @@ public class ShoppingListFragment extends Fragment{
 
     public void getShoppingList(final ProgressDialog dialog){
         final ArrayList<ShoppingList> list = new ArrayList<>();
-        FirebaseDatabase.getInstance().getReference().child("activeList").addChildEventListener(new ChildEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("activeList").child(mAuth.getUid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(dataSnapshot!=null && dataSnapshot.getValue()!= null) {

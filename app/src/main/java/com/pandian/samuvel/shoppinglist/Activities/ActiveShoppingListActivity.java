@@ -3,6 +3,7 @@ package com.pandian.samuvel.shoppinglist.Activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,9 @@ import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +31,7 @@ import com.pandian.samuvel.shoppinglist.Adapter.ListItemAdapter;
 import com.pandian.samuvel.shoppinglist.Helper;
 import com.pandian.samuvel.shoppinglist.Model.ShoppingItemList;
 import com.pandian.samuvel.shoppinglist.Model.ShoppingList;
+import com.pandian.samuvel.shoppinglist.Model.User;
 import com.pandian.samuvel.shoppinglist.R;
 
 import java.util.ArrayList;
@@ -41,6 +46,8 @@ public class ActiveShoppingListActivity extends AppCompatActivity {
     ShoppingList shoppingList;
     ListItemAdapter listItemAdapter;
     ListView addedListItem;
+    FirebaseAuth auth;
+    String ownerName ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +58,7 @@ public class ActiveShoppingListActivity extends AppCompatActivity {
         shoppingList = (ShoppingList) intent.getSerializableExtra("selectedList");
         addItemFab = findViewById(R.id.addItemFab);
         addedListItem = findViewById(R.id.addedItemList);
-
+        auth = FirebaseAuth.getInstance();
         LayoutInflater inflater = LayoutInflater.from(this);
         View editPromptView = inflater.inflate(R.layout.prompt_edit_list,null);
         View addListItemView =inflater.inflate(R.layout.prompt_create_listitem,null);
@@ -74,9 +81,14 @@ public class ActiveShoppingListActivity extends AppCompatActivity {
                 addItemDialog.show();
             }
         });
-
+        Helper.getCurrentUser(auth.getUid()).continueWith(new Continuation<User, Object>() {
+            @Override
+            public Object then(@NonNull Task<User> task) throws Exception {
+                ownerName = task.getResult().getUserName();
+                return null;
+            }
+        });
     }
-
     private boolean checkListIsAvailable(final ProgressDialog dialog) {
         final boolean[] check = {true};
         FirebaseDatabase.getInstance().getReference().child("shoppingListItems").child(shoppingList.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -150,7 +162,7 @@ public class ActiveShoppingListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(!addItemText.equals("")){
-                    Helper.addListItem(shoppingList.getKey(),addItemText.getText().toString());
+                    Helper.addListItem(shoppingList.getKey(),addItemText.getText().toString(),ownerName);
                     addItemText.setText("");
                 }
             }
@@ -174,7 +186,7 @@ public class ActiveShoppingListActivity extends AppCompatActivity {
                 String editedListName = editList.getText().toString();
                 HashMap<String,Long> timeStampLastchanged = new HashMap<>();
                 timeStampLastchanged.put("timeStamp",System.currentTimeMillis());
-                Helper.updateShoppingList(shoppingList.getKey(),editedListName,timeStampLastchanged,shoppingList.getTimeStampCreated());
+                Helper.updateShoppingList(shoppingList.getKey(),editedListName,timeStampLastchanged,shoppingList.getTimeStampCreated(),ownerName);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
