@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.pandian.samuvel.shoppinglist.Activities.ActiveShoppingListActivity;
 import com.pandian.samuvel.shoppinglist.Activities.MainActivity;
 import com.pandian.samuvel.shoppinglist.Adapter.ShoppingListAdapter;
@@ -64,6 +66,8 @@ public class ShoppingListFragment extends Fragment{
     public void initializeScreen(View rootView){
         shoppingListview = rootView.findViewById(R.id.shopingListLv);
         mAuth = FirebaseAuth.getInstance();
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("Token",token);
     }
 
     private boolean checkChildIsAvailable(final ProgressDialog dialog){
@@ -96,9 +100,11 @@ public class ShoppingListFragment extends Fragment{
                     final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
                     shoppingList.setKey(dataSnapshot.getKey());
                     list.add(shoppingList);
-                    adapter = new ShoppingListAdapter(list,getContext());
-                    if(getContext()!=null)
-                    shoppingListview.setAdapter(adapter);
+                    if(getContext()!=null){
+                        adapter = new ShoppingListAdapter(list,getContext());
+                        shoppingListview.setAdapter(adapter);
+                    }
+
                     size = list.size();
                     shoppingListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override

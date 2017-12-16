@@ -44,7 +44,7 @@ public class Helper {
         shoppingList.setTimeStampLastUpdated(timeStampLastchanged);
         HashMap<String, Object> map = new HashMap<>();
         map.put(key, shoppingList);
-        FirebaseDatabase.getInstance().getReference().child("activeList").updateChildren(map);
+        FirebaseDatabase.getInstance().getReference().child("activeList").child(auth.getUid()).updateChildren(map);
     }
 
     public static void removeShoppingList(String key) {
